@@ -173,7 +173,8 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       }
     }
 
-    public getSteelValue(): number {
+    public getSteelValue(game: Game): number {
+      if (PartyHooks.shouldApplyPolicy(game, PartyName.MARS, 'mfp03')) return this.steelValue + 1;
       return this.steelValue;
     }
 
@@ -1216,7 +1217,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
         if (howToPay.steel > this.steel) {
           throw new Error('Do not have enough steel');
         }
-        totalToPay += howToPay.steel * this.steelValue;
+        totalToPay += howToPay.steel * this.getSteelValue(game);
       }
 
       if (canUseTitanium && howToPay.titanium > 0) {
@@ -1912,7 +1913,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
           maxPay += this.heat;
         }
         if (canUseSteel) {
-          maxPay += this.steel * this.steelValue;
+          maxPay += this.steel * this.getSteelValue(game);
         }
         if (canUseTitanium) {
           maxPay += this.titanium * this.getTitaniumValue(game);
@@ -1955,10 +1956,17 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
       if (game !== undefined && canUseTitanium) {
         return (this.canUseHeatAsMegaCredits ? this.heat : 0) +
-        (canUseSteel ? this.steel * this.steelValue : 0) +
+        (canUseSteel ? this.steel * this.getSteelValue(game) : 0) +
         (canUseTitanium ? this.titanium * this.getTitaniumValue(game) : 0) +
         extraResource +
           this.megaCredits >= cost;
+      }
+
+      if (game !== undefined && canUseSteel) {
+        return (this.canUseHeatAsMegaCredits ? this.heat : 0) +
+        (canUseSteel ? this.steel * this.getSteelValue(game) : 0) +
+        extraResource +
+          this.megaCredits >= cost;        
       }
 
       return (this.canUseHeatAsMegaCredits ? this.heat : 0) +
