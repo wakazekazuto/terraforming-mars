@@ -174,6 +174,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     }
 
     public getSteelValue(game: Game): number {
+      // TODO: Move policyIds to enum
       if (PartyHooks.shouldApplyPolicy(game, PartyName.MARS, 'mfp03')) return this.steelValue + 1;
       return this.steelValue;
     }
