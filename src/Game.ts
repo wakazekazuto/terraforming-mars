@@ -59,6 +59,7 @@ import {RandomMAOptionType} from './RandomMAOptionType';
 import {AresHandler} from './ares/AresHandler';
 import {IAresData} from './ares/IAresData';
 import {Multiset} from './utils/Multiset';
+import {PartyName} from './turmoil/parties/PartyName';
 
 export interface Score {
   corporation: String;
@@ -1265,6 +1266,9 @@ export class Game implements ILoadable<SerializedGame, Game> {
       }
       this.temperature += 2 * steps;
       if (this.phase !== Phase.SOLAR) {
+        if (PartyHooks.shouldApplyPolicy(this, PartyName.KELVINISTS, 'kp02')) {
+          player.setResource(Resources.MEGACREDITS, steps * 2);
+        }
         player.increaseTerraformRatingSteps(steps, this);
       }
       // BONUS FOR HEAT PRODUCTION AT -20 and -24
