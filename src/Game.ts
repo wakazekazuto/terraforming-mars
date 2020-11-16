@@ -1185,6 +1185,10 @@ export class Game implements ILoadable<SerializedGame, Game> {
       }
       this.oxygenLevel += steps;
       if (this.phase !== Phase.SOLAR) {
+        // PoliticalAgendas Reds P4 hook
+        if (PartyHooks.shouldApplyPolicy(this, PartyName.REDS, 'rp04')) {
+          player.addProduction(Resources.MEGACREDITS, -1 * steps);
+        }
         player.increaseTerraformRatingSteps(steps, this);
       }
       if (this.oxygenLevel === 8 || (steps === 2 && this.oxygenLevel === 9)) {
@@ -1210,6 +1214,10 @@ export class Game implements ILoadable<SerializedGame, Game> {
       }
       this.venusScaleLevel += 2 * steps;
       if (this.phase !== Phase.SOLAR) {
+        // PoliticalAgendas Reds P4 hook
+        if (PartyHooks.shouldApplyPolicy(this, PartyName.REDS, 'rp04')) {
+          player.addProduction(Resources.MEGACREDITS, -1 * steps);
+        }
         player.increaseTerraformRatingSteps(steps, this);
       }
 
@@ -1266,8 +1274,13 @@ export class Game implements ILoadable<SerializedGame, Game> {
       }
       this.temperature += 2 * steps;
       if (this.phase !== Phase.SOLAR) {
+        // PoliticalAgendas Kelvinists P2 hook
         if (PartyHooks.shouldApplyPolicy(this, PartyName.KELVINISTS, 'kp02')) {
           player.setResource(Resources.MEGACREDITS, steps * 2);
+        }
+        // PoliticalAgendas Reds P4 hook
+        if (PartyHooks.shouldApplyPolicy(this, PartyName.REDS, 'rp04')) {
+          player.addProduction(Resources.MEGACREDITS, -1 * steps);
         }
         player.increaseTerraformRatingSteps(steps, this);
       }
@@ -1514,6 +1527,10 @@ export class Game implements ILoadable<SerializedGame, Game> {
         tileType: TileType.OCEAN,
       });
       if (this.phase !== Phase.SOLAR) {
+        // PoliticalAgendas Reds P4 hook
+        if (PartyHooks.shouldApplyPolicy(this, PartyName.REDS, 'rp04')) {
+          player.addProduction(Resources.MEGACREDITS, -1);
+        }
         player.increaseTerraformRating(this);
       }
       AresHandler.ifAres(this, (aresData) => {
